@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Cities {
 
-
+    //комментарий
     static boolean checkCityLetter(String firstCity, String secondCity){
         char cityChar = firstCity.charAt(firstCity.length()-1);
 
