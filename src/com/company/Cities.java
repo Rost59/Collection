@@ -2,45 +2,74 @@ package com.company;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.Random;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Cities {
 
-    //комментарий
-    static boolean checkCityLetter(String firstCity, String secondCity){
-        char cityChar = firstCity.charAt(firstCity.length()-1);
 
-        switch ((int)cityChar){
+    static boolean checkCityLetter(String needCity, String city) {
+
+        char cityChar = needCity.charAt(needCity.length() - 1);
+
+        switch ((int) cityChar) {
             // код буквы 'ы'
-            case 1099 : cityChar = firstCity.charAt(firstCity.length()-2); break;
+            case 'ы':
+                cityChar = needCity.charAt(needCity.length() - 2);
+                break;
             // код буквы 'ь'
-            case 1100 : cityChar = firstCity.charAt(firstCity.length()-2); break;
+            case 'ь':
+                cityChar = needCity.charAt(needCity.length() - 2);
+                break;
             // код буквы 'й'
-            case 1081 : cityChar = 'и'; break;
+            case 'й':
+                cityChar = 'и';
+                break;
             // код буквы 'ё'
-            case 1105 : cityChar = 'е'; break;
+            case 'ё':
+                cityChar = 'е';
+                break;
         }
 
-       return cityChar == secondCity.charAt(0);
+        return cityChar == city.charAt(0);
     }
 
     // mode (режим игры): 1 - с компьютером, 2 - с игроком
-    static String findingCity(Scanner scan, int mode, String secondCity, HashSet namedCities){
+    static String findingCity(HashSet allCities, HashSet namedCities, String needCity, int step) {
         String city = "";
-        if(mode == 1){
-            while (scan.hasNext()){
-                city = scan.nextLine();
-                if (checkCityLetter(secondCity, city) && !namedCities.contains(city)){
+        Scanner scan = new Scanner(System.in);
+        boolean notRightCity = true;
+        if (step == 1) {
+            Iterator<String> i = allCities.iterator();
+            while (i.hasNext()) {
+                city = i.next().toLowerCase();
+                if (checkCityLetter(needCity, city) && !namedCities.contains(city)) {
+                    System.out.println(city);
                     return city;
                 }
             }
             return city = "Города с названиями, начинающмися на данную букву, отсутствуют";
         } else {
             do {
-                System.out.println("Второй игрок, введите название города (или выход для окончания игры): ");
-                city = scan.next();
-            }while ((checkCityLetter(city, secondCity) && !namedCities.contains(city))||city.toLowerCase().equals("выход"));
+                System.out.println("Введите название города (или выход для окончания игры): ");
+                city = scan.next().toLowerCase();
+
+                if(city.equals("выход")){
+                    break;
+                }
+
+                if (!allCities.contains(city)) {
+                    System.out.println("Такой город не существует");
+                    continue;
+                }
+
+                if (namedCities.contains(city)) {
+                    System.out.println("Такой город уже был назван ранее");
+                    continue;
+                }
+
+                notRightCity = !checkCityLetter(needCity, city);
+            } while (notRightCity);
             return city;
 
         }
@@ -49,59 +78,46 @@ public class Cities {
 
     public static void main(String[] args) {
         Scanner myScanner = new Scanner(System.in);
-        //для хранения уже использованных названий городов
+        // список всех городов
+        HashSet<String> allCities = new HashSet<>();
+        // для хранения уже использованных названий городов
         HashSet<String> namedCities = new HashSet<>();
+        // 0 - ход игрока, 1 - ход компьютера
+        int step = 0;
+        String city = "Москва";
 
         System.out.println("Выберите режим игры: ");
         System.out.println("Цифра 1 - игра с компьютером, цифра 2 - игра с другим игроком");
         int mode = myScanner.nextInt();
-        String city = "";
 
+        // для любого режима игры считываю названия городов из файла и записываю в HashSet
+        try (Scanner scanner = new Scanner(new File("cities.txt"));) {
+            while (scanner.hasNext()) {
+                allCities.add(scanner.next().toLowerCase());
+            }
 
-        try (Scanner scanner = new Scanner(new File("cities.txt"));){
-
-
-            int k = 0;
-            do {
-                // выбран режим игры с компьютером
-                if (mode == 1) {
-                    if (k == 0) {
-                        Random rand = new Random();
-                        for (int i = 0; i < rand.nextInt(10); i++) {
-                            scanner.nextLine();
-                        }
-                        city = scanner.nextLine();
-                        namedCities.add(city);
-                        System.out.println(city);
-
-                    } else {
-                        city = findingCity(scanner, mode, city, namedCities);
-                        namedCities.add(city);
-                        System.out.println(city);
-                    }
-                    k++;
-                } else{
-
-                    System.out.println("Введите название города (или выход для окончания игры): ");
-                    city = myScanner.next();
-                    if(city.toLowerCase().equals("выход")){
-                        break;
-                    }
-                    namedCities.add(city);
-                    city = findingCity(scanner, mode, city, namedCities);
-
-
-                }
-
-                k++;
-            } while (!city.toLowerCase().equals("выход"));
-
-
-
-
-        } catch(Exception exception){
+        } catch (Exception exc) {
 
         }
+        // если выбран режим игры с компьютером, то первый город всегда - Москва
+        if (mode == 1) {
+            System.out.println(city);
+        } else {
+            System.out.println("Введите название города (или выход для окончания игры): ");
+            city = myScanner.next().toLowerCase();
+            namedCities.add(city);
+        }
+
+        do {
+            city = findingCity(allCities, namedCities, city, step % 2);
+            // если выбран режим игры работы с компьютером, то значения step должны меняться (для перехода хода от компьютера к игроку и обратно)
+            if (mode == 1) {
+                step++;
+            }
+            namedCities.add(city.toLowerCase());
+        } while (!city.toLowerCase().equals("выход"));
+
+
     }
 
 
