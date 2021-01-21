@@ -5,7 +5,7 @@ import java.util.Stack;
 
 public class PostfixNotation {
 
-
+    // добавлен комментарий для ветки master
     static int  expressionOperation(String firstValue, String secondValue, String operation){
         int result = 0;
         int intFirstValue = Integer.parseInt(firstValue);
