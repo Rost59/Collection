@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Colors {
+    // Комментарий для новой ветки branchForTest
+
     // и еще комментарий
     // Еще комментарий
     // ДОБАВЛЯЮ КОММЕНТАРИЙ
