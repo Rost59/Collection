@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.Stack;
-
+// комментарий
 public class PostfixNotation {
 
 
