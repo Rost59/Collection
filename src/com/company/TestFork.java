@@ -5,5 +5,6 @@ public class TestFork {
         System.out.println("Начало работы. Работа в основной ветке Master");
         //комментарий 1
         //комментарий 2 (добавлен в новой ветке BranchForTestFork)
+        //комментарий 3 (добавлен в новой ветке BranchForTestFork)
     }
 }
