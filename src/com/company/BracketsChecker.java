@@ -1,11 +1,60 @@
 package com.company;
 
-import sun.reflect.generics.tree.Tree;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class BracketsChecker {
+
+    public static boolean checkBracketThree(String expression){
+        Stack<Character> openBrackets = new Stack<>();
+        Set<Character> openCharArray = new HashSet<>();
+        Set<Character> closeCharArray = new HashSet<>();
+        HashMap<Integer, Character> openCharArrayMap = new HashMap<>();
+        HashMap<Integer, Character> closeCharArrayMap = new HashMap<>();
+
+        Collections.addAll(openCharArray, '(', '[', '{');
+        Collections.addAll(closeCharArray, ')', ']', '}');
+
+        int j = 0;
+        for (Character openChar : openCharArray) {
+            openCharArrayMap.put(j, openChar);
+            j++;
+        }
+
+        j = 0;
+        for (Character closeChar : closeCharArray) {
+            closeCharArrayMap.put(j, closeChar);
+            j++;
+        }
+
+        for (int i = 0; i < expression.length(); i++) {
+            char c = expression.charAt(i);
+
+            if (openCharArray.contains(c))
+                openBrackets.push(c);
+            else if (closeCharArray.contains(c)) {
+                if (openBrackets.empty())
+                    return false;
+
+                char openBracket = openBrackets.pop();
+
+
+
+
+                for (int k = 0; k < openCharArray.size(); k++) {
+                    if (openCharArrayMap.get(k).equals(openBracket) && !closeCharArrayMap.get(k).equals(c))
+                        return false;
+                }
+            }
+        }
+        return openBrackets.empty();
+
+
+
+      //  openCharArrayMap.put(1, )
+
+
+    }
 
     // ф-ия выполняет то же самое что и checkBracket, но с использованием ArrayList()
     public static boolean checkBracketTwo(String expression) {
@@ -34,6 +83,8 @@ public class BracketsChecker {
         }
         return openBrackets.empty();
     }
+
+
 
 
     public static boolean checkBracket(String expression) {
@@ -81,8 +132,8 @@ public class BracketsChecker {
     }
 
     public static void main(String[] args) {
-        String expression = "({}[])()";
+        String expression = "({}])()";
       //  System.out.println(checkBracket(expression));
-        System.out.println(checkBracketTwo(expression));
+        System.out.println(checkBracketThree(expression));
     }
 }
