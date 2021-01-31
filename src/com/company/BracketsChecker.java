@@ -38,9 +38,7 @@ public class BracketsChecker {
 
                 char openBracket = openBrackets.pop();
 
-
-
-
+                // не понял как обойтись без цикла, используя HashMap
                 for (int k = 0; k < openCharArray.size(); k++) {
                     if (openCharArrayMap.get(k).equals(openBracket) && !closeCharArrayMap.get(k).equals(c))
                         return false;
