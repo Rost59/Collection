@@ -15,10 +15,6 @@ public class BracketsChecker {
         charArrayMap.put(']', '[');
         charArrayMap.put('}', '{' );
 
-      //  charArrayMap.co
-
-
-
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
 
@@ -34,18 +30,15 @@ public class BracketsChecker {
                     return false;
                 }
 
-
             }
         }
         return openBrackets.empty();
-
 
     }
 
 
     public static void main(String[] args) {
         String expression = "({})}()";
-      //  System.out.println(checkBracket(expression));
         System.out.println(checkBracket(expression));
     }
 }
